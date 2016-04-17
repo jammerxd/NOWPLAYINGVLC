@@ -25,14 +25,18 @@ namespace NOWPLAYINGVLC
         public int updateInterval { get; set; }
         public string lblText { get; set; }
         public string fileText { get; set; }
+        public string format { get; set; }
         public string password { get; set; }
         public string url { get; set; }
         public string saveFileFullName { get; set; }
         string oldFileText { get; set; }
         public Boolean foundAlbum { get; set; }
         public Boolean foundTitle { get; set; }
+        public Boolean foundArtist { get; set; }
+        public Boolean foundGenre { get; set; }
         public string album { get; set; }
         public string title { get; set; }
+        public Song Song { get; set; }
         public ViewModel(IMainWindowCallbacks mainCallbacks)
         {
             if(mainCallbacks ==null)
@@ -49,9 +53,12 @@ namespace NOWPLAYINGVLC
             password = "test";
             url = "http://localhost:8080/requests/status.xml";
             saveFileFullName = Directory.GetCurrentDirectory() + "\\song.txt";
-            album = "Unknown";
-            title = "Unknown";
-
+            Song = new Song();
+            Song.Album = "Unknown";
+            Song.Title = "Unknown";
+            Song.Artist = "Unknown";
+            Song.Genre = "Unknown";
+            format = "$album - $title";
             getXML = new BackgroundWorker();
             getXML.DoWork += GetXML_DoWork;
             getXML.RunWorkerCompleted += GetXML_RunWorkerCompleted;
@@ -96,32 +103,52 @@ namespace NOWPLAYINGVLC
 
                 foundAlbum = false;
                 foundTitle = false;
+                foundArtist = false;
+                foundGenre = false;
 
                 foreach(XmlNode temp in categoryNode.SelectNodes("info"))
                 {
                     if(temp.Attributes["name"].Value == "album")
                     {
-                        album = temp.InnerText;
+                        Song.Album = temp.InnerText;
                         foundAlbum = true;
                     }
                     if(temp.Attributes["name"].Value == "title")
                     {
-                        title = temp.InnerText;
+                        Song.Title = temp.InnerText;
                         foundTitle = true;
+                    }
+                    if(temp.Attributes["name"].Value == "artist")
+                    {
+                        Song.Artist = temp.InnerText;
+                        foundArtist = true;
+                    }
+                    if(temp.Attributes["name"].Value == "genre")
+                    {
+                        Song.Genre = temp.InnerText;
+                        foundGenre = true;
                     }
                 }
                 
                 if(!foundAlbum)
                 {
-                    album = "Unknown";
+                    Song.Album = "Unknown";
                 }
                 if(!foundTitle)
                 {
-                    title = "Unknown";
+                    Song.Title = "Unknown";
+                }
+                if(!foundArtist)
+                {
+                    Song.Artist = "Unknown";
+                }
+                if(!foundGenre)
+                {
+                    Song.Genre = "Unknown";
                 }
 
 
-                fileText = album + " - " + title;
+                fileText = GetText();
 
                 if (oldFileText != fileText)
                 {
@@ -179,6 +206,15 @@ namespace NOWPLAYINGVLC
                 }
                 return _StartStopCommand;
             }
+        }
+        private string GetText()
+        {
+            var tempStr = format;
+            tempStr = tempStr.Replace("$album", Song.Album);
+            tempStr = tempStr.Replace("$title", Song.Title);
+            tempStr = tempStr.Replace("$artist", Song.Artist);
+            tempStr = tempStr.Replace("$genre", Song.Genre);
+            return tempStr;
         }
     }
 }

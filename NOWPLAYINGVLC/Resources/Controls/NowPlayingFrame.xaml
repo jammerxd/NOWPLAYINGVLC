@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NOWPLAYINGVLC.Resources.Controls"
              xmlns:mahappsControls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:helpers="clr-namespace:NOWPLAYINGVLC.Resources.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="350" d:DesignWidth="525">
     <Grid>
@@ -19,19 +20,22 @@
             <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <Button Content="{Binding btnStartStopText}" Command="{Binding StartStopCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4"/>
+        <Button Content="{Binding btnStartStopText}" Command="{Binding StartStopCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="5"/>
         <Label Content="Update Interval: " HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0"/>
-        <Label Content="{Binding lblText}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="3"/>
+        <Label Content="{Binding lblText}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="3"/>
         <Label Content="File Location: " HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
         <Label Content="Web Address: " HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2"/>
-        <Label Content="Password: " HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3"/>
-
+        <Label Content="Password: " HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" />
+        <Label Content="Format: " HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4" />
+        
         <TextBox mahappsControls:TextBoxHelper.Watermark="C:\Users\user\desktop\myfile.txt" Text="{Binding saveFileFullName}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1" Margin="5,10,5,10"/>
         <TextBox mahappsControls:TextBoxHelper.Watermark="http://localhost:8080/requests/status.xml" Text="{Binding url}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Grid.Row="2" Grid.Column="1" Margin="5,10,5,10"/>
-        <TextBox mahappsControls:TextBoxHelper.Watermark="test" Text="{Binding password}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Grid.Row="3" Grid.Column="1" Margin="5,10,5,10"/>
+        <TextBox ToolTip="Available Variables: $album, $title, $artist, $genre" mahappsControls:TextBoxHelper.Watermark="$album - $title" Text="{Binding format}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Grid.Row="4" Grid.Column="1" Margin="5,10,5,10"/>
+        <PasswordBox mahappsControls:TextBoxHelper.Watermark="test" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Grid.Row="3" Grid.Column="1" Margin="5,10,5,10" helpers:PasswordBoxAssistant.BindPassword="True" helpers:PasswordBoxAssistant.BoundPassword="{Binding password, Mode=TwoWay}"/>
         <mahappsControls:NumericUpDown HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,5,5,5" Value="{Binding updateInterval}" Grid.Column="1" Grid.Row="0"/>
     </Grid>
 </UserControl>
